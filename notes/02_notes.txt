@@ -1,0 +1,63 @@
+### notes from second class October 3rd 2022
+
+#### should I favour adjust or precision? it should be the most parcimonious model
+
+### after EDA, I should set parameters that better fit the data I have, so the model should fit to data, not data to the model
+### i should make a lot of models, and from then, i should choose the most parcimonious -> follows all premises, it's validated, and explain enough of my answer variable, but with a minimal effort
+## we are always trying to find the simplest models
+### less number of parameters
+### prefer linear over non linear
+### lower number of premises
+### simple explanations
+
+## create models in a way that each model represents an hypothesis
+## after that, we are going to contrast those models, compare them and rank, and more than one can be used to make predictions (if one mold explains 60% of data, and other explains 30% and atnoher one 10%, we can use the three of them)
+
+## the intercept is a parameter!!! it should be acounted with the other explanatory variables
+
+# GOALS OF THE MODELS!
+## explain a phenomena
+## predict a phenomena
+
+
+## in the plot: it is used to validate models after AIC
+### residuals vs fitted should be a sky full of homogeneously distributed stars
+### normal Q-Q: show how residuals are distributed, and if the line cross all dots, means that it is normally distributed
+### scale-location should be a paralel line to zero
+### resiudals vs leverage: if a very high or low value falls inside the dotted grey lines, it means that it is putting a lot of weight in the model, and maybe it shpuld be excluded from the model, since it is not an outlier.
+
+### EDA
+#### are there NAs?
+#### dependencies and independencies
+#### what distribution the data are in?
+#### correlations
+
+### two approaches for EDA
+#### 1. descriptive statistics
+#### mean, median, standard deviation
+#### 2. graphical analysis
+#### we should look for both of them 
+
+## Bolker, p.60 -> Graphical procedures
+## from data do viz -> shows you which kind of packages and functions you could use on R to your data
+
+# types of graphs
+## Outliers: boxplots, whiskerplots or beeswarm to show you if there are extreme values
+### What are the effects of the outliers on the analysis? Anscombe
+### extreme values cannot determine my pattern -> if they have too much weight in the model, they should be excluded -> "alavancagem" effect
+### when should we exclude an outlier (outliers increase variance and increase the chance of type 2 error/false-negative)
+
+## homogeneity of variances -> Cleveland dotplot
+### isolated dots at left or right could mean very different values
+### when variances are not homogeneous, it means that we won't be able to fit a simple linear regression
+
+## frequency plot (~ histogram)
+### show how data is dispersed, too many zeros, etc
+
+## boxplots are not that good on representing the form of the distribution of data
+### we could use than violin plot -> it is more informative about data distribution
+### raincloud plot
+### we could also use simple histogram!
+
+## leverage occurs and it is a problem when the dot is over 3, and when a dot is with high cook's distance, it will be inside the dotted grey lines in plot
+

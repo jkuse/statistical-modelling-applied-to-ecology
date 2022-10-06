@@ -1,0 +1,28 @@
+## notes from first class of statistical modelling October 5th 2022
+
+### still on eda
+### VIF is an index that measures collinearity
+### autocorrelation is very common in temporal samples -- how to test for this? ACF?
+
+### there are some models with a linear structure and that are used for non-linear data
+
+### when you have significant values of correlation, you MAY have collinearity, but is not certain, you can generate the model and then do a VIF (variance inflation factor) test to see if collinearity is really happening
+
+## validation
+### R squares: a good way to see it is plotting predictions of the model vs observed values
+### the most important graph to evaluate premisses: residual vs predicted (must be done AFTER having a model, as a way to validate it) -> must be like a sky full os stars homogenously distributed
+### residual vs fitted -> red line should be on zero, horizontaly 
+### standarized residuals -> in a scale of -2 to 3
+### funnel shape -> indicates heteroscedasticity -> which means, breaking the rule of homogeneity of variances
+### qq plot is also a good way to validate a model, but it should be done with the residuals, after having the model
+### cook's distance, measures the influence of taking off one variable (usually one that is looking like an outlier) - cook's values > 1 we have a problem: this variable is influencing too much the model
+### leverage: is related with cook's distance -> extreme explanatory variables
+### autocorrelation should also be tested with an adjusted model
+
+### link function for GLM - put data in a "real scale", because when you choose a distribution different from normal, scale can be changed
+### normal - identity
+### poisson - log
+### binomial - logit
+### gamma - reciprocal
+
+

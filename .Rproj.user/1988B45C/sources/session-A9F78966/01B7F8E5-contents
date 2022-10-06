@@ -1,0 +1,29 @@
+## notes from second class of October 5th 2022
+
+### stardarized or stundentized residuals sometimes are better to see homogeneity of data
+### in residuals vs fitted graphs, the smoothed line is expected to be flat, but when it is a bit curved, it may be a quadratic distribution
+
+### acf() - function to deal with autocorrelation - makes a lag
+### when funnel shape appears, maybe the first thing to do is search for outliers
+
+----------------normal & poisson------------------------------------------------
+## GLM! it has 3 steps
+### 1st - need to define the distribution of my random/error variable
+### 2nd - need to define the explanatory variables
+### 3rd - define link function between response variable and explanatory variables (systematic part of the model)
+
+### systematic part of liner model will predict the most likely/expected value for random variable 
+### linear regression is also a GLM!!
+### link function links the systematic part of the model with the data scale!!
+
+### GLM uses maximum likelihood, not minimun square
+### for poisson dist, L is the value for maximum likelihood
+
+### ways to select models
+### hypothesis test or AIC
+### comand drop1(): takes off 1 variable and apply a deviation analisys
+### use anova, compare the 2 models by a deviation analisys
+> anova(M2,M3,test='Chi)
+
+### comand setp(model) -> compares by AIC
+### done the selection, you should validate de model

@@ -1,0 +1,54 @@
+## Notes from first class October 3rd 2022
+### data can break 'rules', we should choose the most suitable technique for it
+### path/protocols:
+#### 1st eda -> pairs
+#### 2nd model -> M1, M2, M3
+#### 3rd selection -> AIC
+#### 4th validation -> plot
+
+## both bayesian and frequentist statistics uses likelihood 
+## we also use the informatic-theoretic to choose which of the models we created are the most parcimonious (which i should use, that explains better my models variation with less effort)
+
+## mechanistic models are always associated with math models and the phenomenological always with the statistical ones?
+
+## response variable and explanatory variable (should be really clear), in my project?
+### response: composition of species and traits
+### explanatory: human use, climate and soil
+
+### error: is a random variable with normal distribution:
+#### that means that the random variable is a range of values inside a normal distribution that could explain y. if it is outside the normal dist, it is an outlier, you couldn't assume that the resiaduals are in a normal dist
+### or, a range of possible values for y for each x, inside a normal distribution.
+
+### the break of homogeneity of variances: means that for a certain point of y, the variance of x can be larger than the other points
+
+
+## How to fit a line to the data? Sum of the residuals' square!
+## The lowest values gives you the fittest line
+## Finding the line you find the parametes B0 and B1
+
+
+## Least squares method (but you need to test a lot of lines)
+## Minimun square methods
+### 1st medium of y and x (trace a line)
+### 2nd measure the distance of y to the medium and x to the medium (sum of y square, sum of x square and sum of y*x squares)
+### B1 = coviariance (variance of y*x squares) / variance of x
+### B0 = meanY - B1*meanX
+### error = sqr(sum of residuals' square/ n -2) -> determines the openness of the normal distribution, which means, how much y can vary and be inside a normal dist
+
+## R^2 or regression coeficient
+### what does thar mean? how much the fitted line/the regression can explain the varaince of the data
+### R^2 = SQreg / SQy -> R^2 = SQreg / SQreg + SQR
+### adjusted R^2 -> corrects the value to account for the number of variables you have in the model
+
+###  in the regression models, when you reject H0, you reject the possibility that the x values do not explain variance in y (which mean,s we reject the hypothesis that there's no influence of x in y)
+
+## if the data fit in a normal distribution, we can assume that error (random variable) is normal too -> but we can also look for the residual's distribution, ploting a histogram for then
+
+## the minimun sqaure methods assumes that data is normal, if not, we need another approach to define if x influences y
+## we can use the approach of likelihood -> this is used to generalized the lienar regression when you don't have a normal dist!!!
+## generalizations in general uses likelihood -> what is the probabiblity that makes the data that i've seen be more likely to happen?
+## the probability function is coverted in log
+## the first derivative of the probability function gives the maximun/more liely value
+## the second derivative of the probability function gives the variance/error
+### the bigger the sample, more precision you get (low variance)
+### the but if you have a lot of samples, you can adjust a model that has too much variables, diminishing the accuracy -> you also reduce the degrees of freedom, that increases the error. 
