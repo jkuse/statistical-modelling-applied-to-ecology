@@ -1,4 +1,4 @@
-### This repository contains material from the course "Statistical Modelling Applied to Ecology", from the Graduate Program in Ecology, taught by Dr. Fábio Gonçalves Daura Jorge. 
+### This repository contains material from the course "Statistical Modelling Applied to Ecology", from the Graduate Program in Ecology of UFSC, taught by Dr. Fábio Gonçalves Daura Jorge. 
 
 #### Project structure
 
