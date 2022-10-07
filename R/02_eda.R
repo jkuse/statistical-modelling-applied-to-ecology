@@ -307,10 +307,19 @@ help(iris)
 
 # Como eh a distribuicao das medidas de cada variavel?
 head(iris)
-hist(iris$Sepal.Length)
-hist(iris$Sepal.Width)
-hist(iris$Petal.Length)
-hist(iris$Petal.Width)
+par(mfrow = c(2,2))
+hist(iris$Sepal.Length, prob=T)
+curve(dnorm(x, mean = mean(iris$Sepal.Length), sd = sd(iris$Sepal.Length)),
+      add=T, col="red")
+hist(iris$Sepal.Width, prob=T)
+curve(dnorm(x, mean = mean(iris$Sepal.Width), sd = sd(iris$Sepal.Width)),
+      add=T, col="red")
+hist(iris$Petal.Length, prob=T)
+curve(dnorm(x, mean = mean(iris$Petal.Length), sd = sd(iris$Petal.Length)),
+      add=T, col="red")
+hist(iris$Petal.Width, prob=T)
+curve(dnorm(x, mean = mean(iris$Petal.Width), sd = sd(iris$Petal.Width)),
+      add=T, col="red")
 par(mfrow = c(1,1))
 
 par(mfrow = c(2,2))
@@ -326,13 +335,64 @@ qqline(iris$Petal.Length, col="blue", lwd=2)
 qqnorm(iris$Petal.Width, main = "Petal Width")
 qqline(iris$Petal.Width, col="blue", lwd=2)
 
-
 par(mfrow = c(1,1))
 ### what can be seen? not normally distributed
 ### try to do a for loop for this
 
+
 # Tem outliers?
+par(mfrow = c(2,2))
+beeswarm(iris$Sepal.Length)
+beeswarm(iris$Sepal.Width)
+beeswarm(iris$Petal.Length)
+beeswarm(iris$Petal.Width)
+par(mfrow = c(1,1))
+
+
+plot(iris$Sepal.Length)
+plot(iris$Sepal.Width)
+plot(iris$Petal.Length)
+plot(iris$Petal.Width)
+
+dotchart(iris$Sepal.Length)
+dotchart(iris$Sepal.Width)
+dotchart(iris$Petal.Length)
+dotchart(iris$Petal.Width)
+
+stripchart(iris$Sepal.Length,method="stack")
+stripchart(iris$Sepal.Width,method="stack") ## seems like it has outliers
+stripchart(iris$Petal.Length,method="stack")
+stripchart(iris$Petal.Width,method="stack")
+
 # Tem distribuicao normal?
+## sepal's measurements are closer to be normally distributed than petal's
+
 # As variaveis estao correlacionadas?
+
 # Existe diferenca das medidas entre as tres especies? Compare as medias,
+mean(iris$Sepal.Length)
+mean(iris$Sepal.Width)
+mean(iris$Petal.Length)
+mean(iris$Petal.Width)
 # plote graficos
+par(mfrow = c(2,2))
+boxplot(iris$Sepal.Length)
+boxplot(iris$Sepal.Width) ## seems like it has outliers
+boxplot(iris$Petal.Length)
+boxplot(iris$Petal.Width)
+par(mfrow = c(1,1))
+
+new_iris <- iris[,-5]
+
+pairs(new_iris)
+
+pairs(new_iris, diag.panel = panel.hist)
+
+# Agora plotamos com indices de correlacao e histogramas
+pairs(new_iris, diag.panel=panel.hist, lower.panel=panel.cor)
+
+# Incluimos tambem a linha de suavizacao
+pairs(new_iris, panel=panel.smooth, diag.panel=panel.hist, lower.panel=panel.cor)
+
+### sepal length seems to be strongly correlated with petal length and petal width
+### petal length and petal width seems strongly correlated 

@@ -1,0 +1,34 @@
+### notes from third class: bionomial dist
+### if there is autocorrelation with data i need GLS
+### plot residuals might be interesting 
+### binomial dist might be interesting to solve some problems we can't solve: everything that is not zero becomes 1
+### Binomial GLM == logistic regression!!!!
+### the link function for models with response value == bionomial dist , logit
+### p == chance of occurence of something
+### q = 1 - p == chance of something else occur
+### logit = log of chances = log ratio or log of probabilities in log scale
+### chance != probability
+### probability = something is like this in 100%
+### chance is the probability/percentange of that thing really happen
+
+ex: probability of being infected = 20, so 0.2%
+     chance of infected = 0.2/0.8
+     
+### but we want to know the ratio of chance of males or females being infected
+### ratio of chance == odds ratio
+    chance of infection males = 0.3/0.7 = 0.43
+    chance of infection famales = 0.1/0.9 = 0.11
+    odds ratio =
+    
+when we take off the log of odd ratios, we accept negative values
+
+### when Fisher score is higher than 8, it means that there's no convergence of the model, so it is not valid
+## Fisher scoring is an optimization iterative method
+
+### validation of binomial models are a bit differente, it doesn't makes a lot of sense to look a dispersion, residuals vs fitted, etc
+
+### GLM multinomial
+### response variable is qualitative, with three or more categories
+### multinomial distribution of errors
+
+

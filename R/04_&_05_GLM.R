@@ -29,12 +29,16 @@ head(RoadKills)
 
 # Para economizar espaco... 
 RK <- RoadKills
-
+rm(RoadKills)
 # Por simplificacao, considerar uma unica variavel explicativa por ora
 plot(TOT.N~D.PARK,xlab="Distancia do parque",
      ylab="Mortes na estrada", data=RK) # o que esse plot sugere em termos de distribuicao?
 
+qqPlot(RK$TOT.N, distribution = "pois", lambda = mean(RK$TOT.N))
+qqPlot(RK$TOT.N, distribution = "nbinom", lambda = mean(RK$TOT.N))
 
+hist(RK$TOT.N)
+par(mfrow = c(1,1))
 #~~~~~~~~~~~~~~~~~~~~~~~~#
 # 2. O Modelo ----
 #~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -83,6 +87,11 @@ summary(M2)
 # Pergunta 1: Quanto o conjunto de variaveis explicativas explica da variavel resposta?
 pseudoR2 <- ((1071.44-270.23)/1071.44)*100
 pseudoR2
+
+## explains 74%, that is more than first model 
+summary(M1)
+pseudoR1 <- ((1071.4 - 390.9)/1071.4)*100
+pseudoR1
 # Pergunta 2: Preciso de todas elas? Ao menos duas nao sao significativas...
 
 # Sera que nao tem colinearidade entre variaveis?
@@ -90,13 +99,16 @@ pseudoR2
 install.packages("car", dependencies=TRUE)
 library(car)
 vif(M2) # Tudo ok!!! VIF precisa ser menor que 3
-
+vars <- c(RK$SQ.DWATCOUR, RK$SQ.SHRUB, RK$SQ.LPROAD, RK$SQ.OLIVE, RK$SQ.URBAN, RK$SQ.WATRES, RK$SQ.POLIC,
+          RK$L.SDI, RK$P.EDGE, RK$N.PATCH, RK$D.PARK)
+cor(vars)
 # Um comando que automatiza a selecao pelo AIC
 step(M2) # definir forward ou backward ou both (ver help da funcao) 
 # Interpretar o resultado
 
 # Comando drop1
 drop1(M2, test="Chi")
+
 # Exclui uma variavel por vez
 # Sempre que exclui uma variavel, o desvio aumenta
 # Testa ("Chi") se esse aumento do desvio eh significativo ao ponto de justificar a inclusao da variavel retirada
@@ -227,7 +239,51 @@ Mquasi2<- glm(TOT.N ~ OPEN.L + MONT.S + SQ.POLIC+
                 SQ.SHRUB + SQ.WATRES + L.WAT.C + SQ.LPROAD+
                 D.PARK, family = quasipoisson, data = RK)
 
-summary(Mquasi2) 
+summary(Mquasi2)
+
+drop1(Mquasi2, test = "F")
+
+Mquasi3<- glm(TOT.N ~ MONT.S + SQ.POLIC+
+                SQ.SHRUB + SQ.WATRES + L.WAT.C + SQ.LPROAD+
+                D.PARK, family = quasipoisson, data = RK)
+summary(Mquasi3)
+
+drop1(Mquasi3, test="F")
+Mquasi4<- glm(TOT.N ~ MONT.S + SQ.POLIC+
+                SQ.SHRUB + L.WAT.C + SQ.LPROAD+
+                D.PARK, family = quasipoisson, data = RK)
+summary(Mquasi4)
+
+drop1(Mquasi4, test = "F")
+
+Mquasi5<- glm(TOT.N ~ MONT.S + SQ.POLIC+
+                SQ.SHRUB + L.WAT.C +
+                D.PARK, family = quasipoisson, data = RK)
+summary(Mquasi5)
+
+drop1(Mquasi5, test="F")
+
+Mquasi6<- glm(TOT.N ~ MONT.S + SQ.POLIC + L.WAT.C +
+               D.PARK, family = quasipoisson, data = RK)
+summary(Mquasi6)
+
+drop1(Mquasi6, test="F")
+
+Mquasi7<- glm(TOT.N ~ MONT.S + L.WAT.C +
+                D.PARK, family = quasipoisson, data = RK)
+summary(Mquasi7)
+
+drop1(Mquasi7, test='F')
+
+Mquasi8 <-  glm(TOT.N ~ L.WAT.C +
+                  D.PARK, family = quasipoisson, data = RK)
+summary(Mquasi8)
+
+drop1(Mquasi8, test = "F")
+
+Mquasi9 <-  glm(TOT.N ~ 
+                  D.PARK, family = quasipoisson, data = RK)
+summary(Mquasi9)
 
 # Exercicio opcional:
 # Siga adiante, a partir do Mquasipoisson1, usando o comando drop1, para seleionar o modelo adequado
@@ -248,6 +304,7 @@ plot(M1)
 # Validacao para quasipoisson 
 M1quasi<- glm(TOT.N ~ D.PARK, family = quasipoisson, data = RK)
 plot(M1quasi)
+par(mfrow = c(1,1))
 # Interprete: padroes sao observados? Continuo com o mesmo problema...
 
 # Esta funcao plot apresenta apenas o residuo ordinario
@@ -363,7 +420,7 @@ M.exemplo <- glm(TOT.N~MONT.S*D.PARK,family=poisson,data=RK)
                                  type = "eff", 
                                  show.legend = TRUE, 
                                  title = "", 
-                                 axis.title = c("MONT.S", "TOT.N"), 
+                                 axis.title = c("D.PARK", "TOT.N"), 
                                  term = c("D.PARK", "MONT.S")))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -384,8 +441,133 @@ summary(Mbn1)
 
 # Exercicio opcional: 
 # Selecione o modelo com drop1 utilizando BN
+drop1(Mbn1, test="Chi")
+
+Mbn2<-glm.nb(TOT.N~OPEN.L+MONT.S+SQ.POLIC+
+               SQ.SHRUB+SQ.WATRES+L.WAT.C+SQ.LPROAD+D.PARK,link="log",data=RK)
+
+summary(Mbn2)
+
+drop1(Mbn2, test="Chi")
+
+Mbn3<-glm.nb(TOT.N~OPEN.L+MONT.S+
+               SQ.SHRUB+SQ.WATRES+L.WAT.C+SQ.LPROAD+D.PARK,link="log",data=RK)
+summary(Mbn3)
+
+drop1(Mbn3, test="Chi")
+
+Mbn4<-glm.nb(TOT.N~OPEN.L+MONT.S+
+               SQ.SHRUB+L.WAT.C+SQ.LPROAD+D.PARK,link="log",data=RK)
+summary(Mbn4)
+
+drop1(Mbn4, test="Chi")
+
+Mbn5<-glm.nb(TOT.N~OPEN.L+MONT.S+L.WAT.C+SQ.LPROAD+D.PARK,link="log",data=RK)
+summary(Mbn5)
+
+drop1(Mbn5, test="Chi")
+
+Mbn6<-glm.nb(TOT.N~OPEN.L+L.WAT.C+SQ.LPROAD+D.PARK,link="log",data=RK)
+summary(Mbn5)
+
+drop1(Mbn6, test="Chi")
+
+Mbn7<-glm.nb(TOT.N~OPEN.L+L.WAT.C+D.PARK,link="log",data=RK)
+summary(Mbn7)
+
+drop1(Mbn7, test="Chi")
+
+Mbn8 <- glm.nb(TOT.N~OPEN.L+D.PARK,link="log",data=RK)
+summary(Mbn8)
 # Veja a tabela AIC (instrucoes acima) - use ICtab
+model.sel(Mbn1,Mbn2,Mbn3,Mbn4,Mbn5,Mbn6,Mbn7,Mbn8)
+## or in another way
+AIC <- ICtab (Mbn1,Mbn2,Mbn3,Mbn4,Mbn5,Mbn6,Mbn7,Mbn8,base = TRUE, type = c("AICc"), weights = TRUE,
+              delta = TRUE, sort = TRUE, nobs = 52, k = TRUE)
+
+AIC
+
 # Valide o modelo com a funcao plot(Modelo) ou pelos desvios residuais e discuta (ou ainda pelo pacote DHARMa)
+par(mfrow = c(2,2))
+plot(Mbn6)
+plot(Mbn5)
+plot(Mbn8)
+par(mfrow = c(1,1))
+
+# Calcular os residuos
+simulationOutput6 <- simulateResiduals(fittedModel = Mbn6, n = 1000)
+residuals(simulationOutput6)
+
+simulationOutput7 <- simulateResiduals(fittedModel = Mbn7, n = 1000)
+residuals(simulationOutput7)
+
+simulationOutput5 <- simulateResiduals(fittedModel = Mbn5, n = 1000)
+residuals(simulationOutput5)
+
+simulationOutput8 <- simulateResiduals(fittedModel = Mbn8, n = 1000)
+residuals(simulationOutput8)
+
+
+# Testando dispersao
+testDispersion(simulationOutput6, type = "PearsonChisq")
+
+testDispersion(simulationOutput7, type = "PearsonChisq")
+
+testDispersion(simulationOutput5, type = "PearsonChisq")
+
+testDispersion(simulationOutput8, type = "PearsonChisq")
+# Plot principal para usar
+plot(simulationOutput6)
+
+plot(simulationOutput7)
+
+plot(simulationOutput5)
+
+plot(simulationOutput8)
+summary(Mbn8)
+
+Mbn5<-glm.nb(TOT.N~OPEN.L+MONT.S+L.WAT.C+SQ.LPROAD+D.PARK,link="log",data=RK)
+
+(effects.D.PARK <- plot_model(Mbn5, 
+                              type = "eff", 
+                              show.legend = FALSE, 
+                              title = "", 
+                              axis.title = c("D.PARK", "TOT.N"), 
+                              term = c("D.PARK")))
+
+(effects.MONT.S <- plot_model(Mbn5, 
+                              type = "eff", 
+                              show.legend = FALSE, 
+                              title = "", 
+                              axis.title = c("MONT.S", "TOT.N"), 
+                              term = c("MONT.S")))
+
+(effects.OPEN.L <- plot_model(Mbn5, 
+                              type = "eff", 
+                              show.legend = FALSE, 
+                              title = "", 
+                              axis.title = c("OPEN.L", "TOT.N"), 
+                              term = c("OPEN.L")))
+
+(effects.L.WAT.C <- plot_model(Mbn5, 
+                              type = "eff", 
+                              show.legend = FALSE, 
+                              title = "", 
+                              axis.title = c("L.WAT.C", "TOT.N"), 
+                              term = c("L.WAT.C")))
+
+(effects.SQ.LPROAD <- plot_model(Mbn5, 
+                               type = "eff", 
+                               show.legend = FALSE, 
+                               title = "", 
+                               axis.title = c("SQ.LPROAD", "TOT.N"), 
+                               term = c("SQ.LPROAD")))
+(Fig2.Predicts <- ggarrange(effects.D.PARK, effects.SQ.LPROAD, effects.MONT.S, 
+                            effects.OPEN.L,
+                            effects.L.WAT.C,
+                            labels = c("(a)", "(b)", "(c)", "(d)","(e)"),
+                            ncol = 3, nrow = 2, font.label = list(size = 9, color ="black")))
+
 # Compare o resultado com Poisson e quasipoisson
 
 #~~~~~~~~~~~~~~~~~~~~~~~~#

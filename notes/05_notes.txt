@@ -1,0 +1,26 @@
+# notes from third class, GLMs with poisson, quasi-poisson and negative binomial
+
+## when you call summary function for a given model in GLM, you should look at coefficients
+### estimates are betas
+### we should also look at deviances 
+### when residual deviation gets closer to null deviation, it is not good for the validation of the model, model is "B=bad"
+
+###  in drop1() funciton, when i have a poiss dist, i should use chi function for the test, if i have a quasi poiss dist, i should use F function for the test
+### drop1 function shows you how significant is the change in deviation taking off one of the variables, if significance is low, you can take it off
+
+### when models have nested predictors variables, you can use anova and drop1 to compare models etc, but if they're not nested, you can only compare by AIC
+### nested variables example: x1, x2, x3
+                              x1, x2
+### non nested variables example: x1, x2, x3
+                                  x1, x2
+                                  x1, x4
+### when you rank models with model.sel(), when in the delta values two models are ranked with values lower than 2, you cannot choose which is the best, both can explain well your data. And when you have this situation, you can perdict a certain value given an explanatory variable using pounded prediction with the AIC weight. 
+### to present the table in papers and other publication, you can drop the explanatoy variables
+
+### in overdisperesed data, to calc the dispertion parameter, you can do 
+residual dev/degrees of freedom. values higher than 1.5 or 2 are very high
+
+### disperseal parameter makes the error higher, which means, model supports more variance in data, which means that we will detect less significant changes
+
+### but with quasi poisson you don't have AIC values anymore, so you can use the hat values
+

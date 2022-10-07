@@ -240,6 +240,7 @@ plot(allEffects(lm.co2.quad))
 
 # Qual foi o melhor modelo?
 AIC(lm.co2, lm.co2.ad, lm.co2.quad)
+
 # A conclusao sobre a taxa de incremento anual de co2 na atmosfera mudou de
 # acordo com o modelo? O que mudou de um modelo para o outro?
 
