@@ -1,0 +1,42 @@
+### notes from autocorrelation class
+
+###autocorrelation can make you find significant relations when there are not
+### spatial and temporal
+## generalized least squares allow us to use the autocorrelation in models
+
+### examples of situations where we can have autocorrelation
+- social behaviour
+- temporal series
+- spatial or temporal blocks
+- animals' movement
+
+### consequences of autocorrelation
+- higher rates of type 1 error (the true null hyphotesis is rejected)
+- bias in patterns
+
+### temproal autocorrelation
+### how population in present time (t) relates to population in passed time: 
+autocorrelation in lag 1
+
+### first step is to determine if there is correlation in a temporal serie
+### influence of independence of data must be taken off
+
+#### somo sort of strategies to solve autocorrelation in time (Temporal)
+- autorregressive model (discrete time) -> needs the generalized least saquares model -> uses a matix of covariance -> funtion gls() -> gives you the correlation values 
+
+### another way to deal with autocorrelation: mobile mea (makes data more soft)
+- express the mean of a random variation whithin the last 
+
+### can be jointed with autoregression model
+### p and q parameters
+
+## ARIMA -> another way to solve autocorrelation problems
+
+
+how do I know I'm dealing with temporal problem? 
+### estacionaridade -> there is a test to check if there is "estacionaridade"
+
+autocorrelation terms (temporal or spatial) can be used as a random part of the model
+(plus random variables)
+
+package(nmle)

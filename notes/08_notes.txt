@@ -1,0 +1,39 @@
+### notes from class of October 10th 2022
+
+### ways of correcting autocorrelation:
+- "Modelo auto-regressivo" with lag 1
+- "Médias móveis" with lag 1 or 
+- ARMA: "modelo de auto regressão com média móvel"
+
+### spatial correlation
+### how to evaluate spatial correlation?
+### variogram, indicates if the distance between residuals, that indicates how similar they are
+  components:
+  1. sill: in a stable point, we have the premise of stationarity
+  2. range: 
+  3. nugget: portion of the semi-variance that is not correlated or it is correlated in a smaller dist
+  
+### in part, problems of autocorrelation can be corrected with the add of another variable
+
+### mixed models
+
+### mixed models can be really complex
+ie NAP * beach = Yij = B0j + B1jNAPij + e -> many intercepts, only one slope
+   NAP + beach = Yij = B0 + B1jNAPij + e -> only one intercept, many slopes
+
+## fixed factor: influences the mean of y
+## random factor: influences the variance of y
+## over 4 levels to be treated as random factor, and each factor must have 3 samples at least --> why??? and what kind of information you need for the random variable to be used
+## if the main hyphotesis includes a variable, this should be used as explanatory
+## random intercept must follow a distribution, it can be normal 
+
+
+### when using mixed models, we use another type of estimator, thus it changes the protocol of model selection
+### usually uses REML or ML (maximum likelihood)
+
+## protocol
+1. start with a model with the highest number of fixed values as possible (excluding colinears)
+2. get this model and search for the best random structure (with REML).
+3. fiding the great structure with AIC, reduce fixed component with the ML method. 
+4. simplify the fixed model with drop1
+5. run final model of third step with REML.

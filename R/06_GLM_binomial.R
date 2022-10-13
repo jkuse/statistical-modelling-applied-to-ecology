@@ -19,7 +19,10 @@
 # Entrar dados de ocorrencia de lesoes de Tuberculose em Javali selvagem na Espanha
 Boar <- read.table(file.choose(), header = TRUE, dec = ".")
 head(Boar)
-
+str(Boar)
+Boar$SEX <- as.factor(Boar$SEX)
+Boar$AgeClass <- as.factor(Boar$AgeClass)
+str(Boar)
 # Variavel resposta: Tb (ocorrencia de lesoes semelhantes a Tuberculose) 
 # Variaveis explanatorias: Sexo; Classe de idade, Tamanho
 
@@ -30,7 +33,7 @@ boxplot(LengthCT~Tb, xlab="Tamanho", ylab="Tb", data = Boar)
 plot(Tb~LengthCT, xlab="Tamanho", ylab="Tb",data=Boar)
 
 # Veja a diferenca plotando com a funcao 'jitter'
-plot(Tb~LengthCT, xlab="Tamanho", ylab="Tb",data=Boar)
+plot(Tb~LengthCT, xlab="Tamanho", ylab="Tb",data=Boar) 
 plot(jitter(Tb)~LengthCT, xlab="Tamanho", ylab="Tb",data=Boar)
 par(mfrow=c(1,1))
 
@@ -39,10 +42,25 @@ par(mfrow=c(1,1))
 #~~~~~~~~~~~~~~~~~~~#
 
 # Funcao glm, familia binomial, link logit 
-B1=glm(Tb~LengthCT, family = binomial(link=logit), data = Boar)
+B1 <- glm(Tb~LengthCT, family = binomial(link=logit), data = Boar)
 summary(B1)
 
+B2 <- glm(Tb~LengthCT +SEX, family = binomial(link=logit), data = Boar)
+summary(B2)
+
+B3 <- glm(Tb~SEX, family = binomial(link=logit), data = Boar)
+summary(B3)
+
+B4 <- glm(Tb~LengthCT + SEX + AgeClass, family = binomial(link=logit), data = Boar)
+summary(B4)
+
+B5 <- glm(Tb~LengthCT + AgeClass, family = binomial(link=logit), data = Boar)
+summary(B5)
+
+library(MuMIn)
+model.sel(B1, B2, B3, B4, B5)
 # Observar: Parametros; AIC; Desvios.
+### models B2 and B4 can be used
 # Pergunta: Quanto a variavel explicativa explica da variacao da variavel resposta?
 
 
@@ -67,11 +85,25 @@ lines(MyData$LengthCT,Pred)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 # Testando se o modelo ajustado explica mais que o modelo nulo
+library(DHARMa)
+simulationOutput <- simulateResiduals(fittedModel = B2, n = 1000)
+residuals(simulationOutput)
+
+# Testando dispersao
+testDispersion(simulationOutput, type = "PearsonChisq")
+
+# Plot principal para usar
+plot(simulationOutput)
+
+### with plot function
+par(mfrow = c(2,2))
+plot(B2)
+par(mfrow = c(1,1))
 
 # Null Deviance - residual deviance
 dev.dif <- 700.76 - 663.56
 # Null df - df.model
-df.dif <- 507 - 506
+df.dif <- 507 - 506 ## degrees of freedom
 # Calculando o p de uma distribuicao de Qui-quadrado
 pchisq(dev.dif, df.dif, lower.tail=F) # Improvavel que vejamos esta reducao
 # em deviance ao acaso
@@ -86,7 +118,7 @@ pchisq(dev.dif, df.dif, lower.tail=F) # Improvavel que vejamos esta reducao
 require(pscl)
 ?pR2
 pR2(B1)
-
+pR2(B2)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~#
 # 6. Estudo de caso ----
@@ -105,15 +137,53 @@ ParasiteCod$fYear <- factor(ParasiteCod$Year)
 ParasiteCod$fSex <- factor(ParasiteCod$Sex)
 # Na analise exploratoria: busque colinearidades
 
+
 # O Modelo (por ora, considerando apenas 3 variaveis)
 P1 <- glm(Prevalence ~ fArea * fYear + Length,
           family = binomial, data = ParasiteCod)
 summary(P1)
 # Observar: Parametros; AIC; Desvios. Lembre que sobredispersao nao ocorre em Bernoulli/Binomial
-# Pergunta: Que modelo eh esse? Descreva
+# Pergunta: Que modelo eh esse? Descreva 
+
+plot(Prevalence ~ Length, data = ParasiteCod)
+par(mfrow = c(1,1))
+## it is a binomial model, that it is using two explanatory variables in an interactive way
+
+P2 <- glm(Prevalence ~ fArea * fYear + Length + Sex + Stage + Age + fSex + Weight + Depth,
+          family = binomial, data = ParasiteCod)
+summary(P2)
+
 # Construa novos modelos e busque o mais parcimonioso com a funcao drop1(Modelo, test = "Chi")
 drop1(P1, test="Chi")
 
+drop1(P2, test="Chi")
+
+P3 <- glm(Prevalence ~ fArea * fYear + Length + Stage + Age + fSex + Weight + Depth,
+          family = binomial, data = ParasiteCod)
+summary(P3)
+
+drop1(P3, test="Chi")
+
+P4 <- glm(Prevalence ~ fArea * fYear + Length + Age + fSex + Weight + Depth,
+          family = binomial, data = ParasiteCod)
+summary(P4)
+
+drop1(P4, test="Chi")
+
+P5 <- glm(Prevalence ~ fArea * fYear + Length + fSex + Weight + Depth,
+          family = binomial, data = ParasiteCod)
+summary(P5)
+
+drop1(P5, test="Chi")
+
+P6 <- glm(Prevalence ~ fArea * fYear + Length + Weight + Depth,
+          family = binomial, data = ParasiteCod)
+summary(P6)
+
+drop1(P6, test="Chi")
+
+model.sel(P1, P2, P3, P4, P5, P6)
+### in order, all models that could be used would be P5, P6 and P4 (all have delta AIC < 2)
 
 # ADENDO: explore o pacote sjPlot para plotar os preditos do modelo
 if(!require(sjPlot)){install.packages("sjPlot");library(sjPlot)} # veja uma forma rapida de instalar e ativar um pacote requerido
@@ -164,10 +234,12 @@ Deer2=glm(cbind(DeerPosCervi,DeerNegCervi)~OpenLand+
             ScrubLand+QuercusPlants+
             QuercusTrees+ReedDeerIndex+EstateSize+fFenced,
           family=binomial, data = Tbdeer)
+
 summary(Deer2)
+### you apply the vif function to the model, and it will gibe you the vif value for the explanatory variables
 vif(Deer2)
 
-# Existe sobredispersao?
+# Existe sobredispersao? y
 
 # Metodo mais simples
 # Divide a Residual deviance pelo Residual degrees of freedom
@@ -176,22 +248,24 @@ vif(Deer2)
 require(AICcmodavg)
 c_hat(Deer2)
 c_hat(Deer2, method = "farrington") # Veja no help outras metricas
-
-
+?c_hat
 # Observar: Parametros; AIC; Desvios. Aqui sobredispersao pode ocorrer
 # Pergunta: Que modelo eh esse? Descreva!
-# Tem sobredispersao dos dados? Caso sim, use quasibinomial. 
+# Tem sobredispersao dos dados? Caso sim, use quasibinomial. ->  how to know that?
 # O que muda depois de ajustar um modelo quasibinomial?
 # E construa novos modelos, buscando o mais parcimonioso com a 
 # funcao drop1(Modelo, test = "Chi" ou test ="F", dependendo
 # se eh da famalia binomial ou quasibinomial, respectivamente) 
 # Valide o modelo com a funcao plot(modelo) ou explore DHarma (será---????)
 
+### here we can use plot and dharma to validate
+
 
 ### GLM multinomial
 install.packages("nnet")
 library(nnet)
 
+install.packages("glmmTBM")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # 8. Exercicio obrigatorio - GLM Binomial ----
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
