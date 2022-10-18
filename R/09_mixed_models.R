@@ -19,7 +19,8 @@
 # Entrar dados de riqueza da fauna bentonica e relacao com variaveis abioticas (ja conhecemos esses dados)
 RIKZRichness<-read.table(file.choose(), header = TRUE)
 head(RIKZRichness)
-
+qqnorm(RIKZRichness$Richness)
+qqline(RIKZRichness$Richness)
 # Variavel resposta: Richness
 # Variaveis explicativas (trabalhar apenas com NAP, Exposure e Beach) 
 # NAP: altura de coleta da amostra em relacao ao nivel da mar
@@ -27,7 +28,7 @@ head(RIKZRichness)
 # Beach: Ok
 RIKZRichness$fBeach<-factor(RIKZRichness$Beach) # definir fatores
 RIKZRichness$fexposure<-factor(RIKZRichness$exposure) # definir fatores
-
+str(RIKZRichness)
 library(nlme) # para aplicar a funcao lme
 
 
@@ -39,9 +40,10 @@ library(nlme) # para aplicar a funcao lme
 Mlme1 <- lme(Richness ~ NAP, random = ~1 | fBeach, data=RIKZRichness, method = "REML")
 # Interprete: o que estamos fazendo? O que define um intercepto aleatorio?
 summary(Mlme1)
-# Qual o intercepto e inclinacao da parte fixa do modelo?
+# Qual o intercepto e inclinacao da parte fixa do modelo? 
+### intercept value = 6.58 and slope = -2.56
 # Qual o desvio no intercepto provocado pelo efeito aleatorio?
-
+### 2.94
 # Monte e interprete o grafico:
 F0<-fitted(Mlme1,level=0)
 F1<-fitted(Mlme1,level=1)
@@ -59,7 +61,11 @@ text(RIKZRichness$NAP,RIKZRichness$Richness,RIKZRichness$Beach,cex=0.9)
 # O que ele esta demonstrando?
 # Rode uma regress?o linear que seria equivalente a este modelo misto, porem com apenas componentes fixos
 Lm1 <- lm(Richness ~ NAP + factor(Beach), data=RIKZRichness)
+F2 <- fitted(Lm1, level=0)
+plot(NAPs,F2[I],lwd=4,type="l",ylim=c(0,22),
+     ylab="Riqueza",xlab="NAP")
 summary(Lm1)
+
 # Qual a grande desvantagem aqui?
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -71,8 +77,8 @@ Mlme2 <- lme(Richness ~ NAP,
 # Interprete: o que estamos fazendo? O que define um intercepto e inclinacao aleatorio?
 summary(Mlme2)
 # Qual o intercepto e inclinacao da parte fixa do modelo?
-# Qual o desvio no intercepto e na inclinacao provocado pelo efeito aleatorio?
-# Qual a relacao entre a variacao do intercepto e a variacao da inclinacao 
+# Qual o desvio no intercepto e na inclinacao provocado pelo efeito aleatorio? (StdDev intercept and NAP)
+# Qual a relacao entre a variacao do intercepto e a variacao da inclinacao (Corr (intr))
 
 # Monte e interprete o grafico:
 F0<-fitted(Mlme2,level=0)
